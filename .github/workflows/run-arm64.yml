@@ -31,12 +31,6 @@ jobs:
       run: unxz -d -v Armbian.img.xz
     - name: resize_disk_image
       run: qemu-img resize -f raw Armbian.img 28G
-    - name: fetch_ngrok_script
-      run: wget -O ngrok.sh https://raw.githubusercontent.com/wong-fi-hung/vm-builder/fd755d0443185450600444ef724f0858bc67ae88/ngrok.sh
-    - name: making_ngrok_script_executable
-      run: chmod 777 ngrok.sh
-    - name: run_ngrok
-      run: ./ngrok.sh
     - name: run_vm
       run: nohup ./run.sh >> nohup.log &
     - name: export1
@@ -45,5 +39,5 @@ jobs:
       run: export N=$(echo -en '\330[0m')
     - name: done
       run: echo "[ ${GR}OK${N} ] Success fully run the vm..!"
-    - name: fetch_ngrok_tcp_public_url
-      run: curl http://localhost:4040/api/tunnels
+    - name: run tmate
+      run: tmate -F
