@@ -13,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: changing_home_ownership
+      run: sudo chown -R runner:runner /home
     - name: configure_term
       run: export TERM=xterm-256color
     - name: install
