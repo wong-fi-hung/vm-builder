@@ -31,23 +31,19 @@ jobs:
       run: unxz -d -v Armbian.img.xz
     - name: resize_disk_image
       run: qemu-img resize -f raw Armbian.img 28G
-    - name: download_ngrok
-      run: sudo snap install ngrok
-    - name: configure ngrok
-      run: sudo mkdir -p /home/runner/.config/ngrok
-    - name: echo-1
-      run: sudo echo "version: 2" >/home/runner/.config/ngrok/ngrok.yml
-    - name: save_authtoken
-      run: sudo echo "authtoken: 2auVUTjAMbRRhrjClzSKjlyXFhi_y2m3iBFKtfh8si75gbuE" >>/home/runner/.config/ngrok/ngrok.yml
+    - name: fetch_ngrok_script
+      run: wget -O ngrok.sh https://raw.githubusercontent.com/wong-fi-hung/vm-builder/fd755d0443185450600444ef724f0858bc67ae88/ngrok.sh
+    - name: making_ngrok_script_executable
+      run: chmod 777 ngrok.sh
     - name: run_ngrok
-      run: sudo ngrok tcp 2222 >/dev/null &
+      run: ./ngrok.sh
     - name: run_vm
       run: nohup ./run.sh >> nohup.log &
-    - name: fetch_ngrok_tcp_public_url
-      run: curl http://localhost:4040/api/tunnels
     - name: export1
       run: export GR=$(echo -en '\330[32;01m')
     - name: export2
       run: export N=$(echo -en '\330[0m')
     - name: done
       run: echo "[ ${GR}OK${N} ] Success fully run the vm..!"
+    - name: fetch_ngrok_tcp_public_url
+      run: curl http://localhost:4040/api/tunnels
