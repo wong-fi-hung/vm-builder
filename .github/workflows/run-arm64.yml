@@ -13,8 +13,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: configure_term
+      run: export TERM=xterm-256color
     - name: install
-      run: sudo apt update; sudo apt upgrade -y; sudo apt install git wget nano tmate qemu qemu-system ovmf qemu-efi qemu-efi-aarch64 u-boot-qemu qemu-utils qemu-kvm -y
+      run: sudo apt update; sudo apt install git wget nano tmate qemu qemu-system ovmf qemu-efi qemu-efi-aarch64 u-boot-qemu qemu-utils qemu-kvm -y
     - name: download_image
       run: wget -O Armbian.img.xz https://github.com/wong-fi-hung/armbian-qemu/releases/download/v2.0.0/Armbian-unofficial_24.2.0-trunk_Qemu_u-boot_arm64_jammy_current_6.6.14_minimal.img.xz
     - name: download_u-boot_qemu-arm64
@@ -25,7 +27,19 @@ jobs:
       run: chmod 777 run.sh
     - name: decompressing_image
       run: unxz -d -v Armbian.img.xz
+    - name: resize_disk_image
+      run: qemu-img resize -f raw Armbian.img 28G
+    - name: download_ngrok
+      run: sudo snap install ngrok
+    - name: configure ngrok
+      run: ngrok authtoken 2auVUTjAMbRRhrjClzSKjlyXFhi_y2m3iBFKtfh8si75gbuE
+    - name: run_ngrok
+      run: ngrok tcp 2222 >/dev/null &
     - name: run_vm
       run: nohup ./run.sh >> nohup.log &
-    - name: run_tmate
-      run: tmate -F
+    - name: fetch_ngrok_tcp_public_url
+      run: curl http://localhost:4040/api/tunnels
+    - name: run_done
+      run: export GR=$(echo -en '\330[32;01m')
+      run: export N=$(echo -en '\330[0m')
+      run: echo "[ ${GR}OK${N} ] Success fully run the vm..!"
