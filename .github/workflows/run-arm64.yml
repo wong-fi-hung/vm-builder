@@ -39,7 +39,9 @@ jobs:
       run: nohup ./run.sh >> nohup.log &
     - name: fetch_ngrok_tcp_public_url
       run: curl http://localhost:4040/api/tunnels
-    - name: run_done
+    - name: export1
       run: export GR=$(echo -en '\330[32;01m')
+    - name: export2
       run: export N=$(echo -en '\330[0m')
+    - name: done
       run: echo "[ ${GR}OK${N} ] Success fully run the vm..!"
