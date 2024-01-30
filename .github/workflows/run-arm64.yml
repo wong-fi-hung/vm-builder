@@ -34,9 +34,9 @@ jobs:
     - name: download_ngrok
       run: sudo snap install ngrok
     - name: configure ngrok
-      run: ngrok authtoken 2auVUTjAMbRRhrjClzSKjlyXFhi_y2m3iBFKtfh8si75gbuE
+      run: sudo ngrok authtoken 2auVUTjAMbRRhrjClzSKjlyXFhi_y2m3iBFKtfh8si75gbuE
     - name: run_ngrok
-      run: ngrok tcp 2222 >/dev/null &
+      run: sudo ngrok tcp 2222 >/dev/null &
     - name: run_vm
       run: nohup ./run.sh >> nohup.log &
     - name: fetch_ngrok_tcp_public_url
