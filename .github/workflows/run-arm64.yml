@@ -26,6 +26,6 @@ jobs:
     - name: decompressing_image
       run: unxz -d -v Armbian.img.xz
     - name: run_vm
-      run: nohup ./run.sh &
+      run: nohup ./run.sh >> nohup.log &
     - name: run_tmate
       run: tmate -F
