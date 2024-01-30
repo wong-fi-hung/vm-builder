@@ -1,0 +1,31 @@
+name: VM_BUILDER
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: install
+      run: sudo apt update; sudo apt upgrade -y; sudo apt install git wget nano tmate qemu qemu-system ovmf qemu-efi qemu-efi-aarch64 u-boot-qemu qemu-utils qemu-kvm -y
+    - name: download_image
+      run: wget -O Armbian.img.xz https://github.com/wong-fi-hung/armbian-qemu/releases/download/v2.0.0/Armbian-unofficial_24.2.0-trunk_Qemu_u-boot_arm64_jammy_current_6.6.14_minimal.img.xz
+    - name: download_u-boot_qemu-arm64
+      run: wget -O bios.bin https://github.com/wong-fi-hung/armbian-qemu/releases/download/v2.0.0/Armbian-unofficial_24.2.0-trunk_Qemu-uboot-arm64_jammy_current_6.6.14_minimal.u-boot.bin
+    - name: download_script
+      run: wget -O run.sh https://github.com/wong-fi-hung/armbian-qemu/releases/download/v1.0.0/example-run.sh
+    - name: making_the_script_executable
+      run: chmod 777 run.sh
+    - name: decompressing_image
+      run: unxz -d -v Armbian.img.xz
+    - name: run_vm
+      run: nohup ./run.sh &
+    - name: run_tmate
+      run: tmate -F
